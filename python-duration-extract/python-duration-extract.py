@@ -1,31 +1,24 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep 15 22:18:44 2026
-
-@author: VitorPrado
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Extração de dados de duração e acústicos a partir de pares TextGrid + WAV.
 Tradução para Python (parselmouth) do script Praat original.
 
 @author: VitorPrado
 """
 
+#%% 0. IMPORTAÇÕES E DEPENDÊNCIAS
 import os
 import glob
 import pandas as pd
 import parselmouth
 from parselmouth.praat import call
+from tqdm import tqdm
 
-# ============================================================
-# 1. Configurações (Preencha com os seus dados)
-# ============================================================
+#%% 1. CONFIGURAÇÕES DE DIRETÓRIOS E PARÂMETROS
 # IMPORTANTE: Instale as dependências antes de rodar:
-# pip install praat-parselmouth pandas
+# pip install praat-parselmouth pandas tqdm
 
-# Substitua o caminho abaixo pelo diretório onde estão seus arquivos .wav e .TextGrid
+# Diretório onde estão os arquivos .wav e .TextGrid
 DIRETORIO_BASE = "C:/Caminho/Para/Sua/Pasta/De/Dados"
 
 ORTHO_TIER = 6
@@ -39,17 +32,13 @@ FREQUENCIA_MAXIMA_FORMANTES = 5500
 
 FORMANT_FRACTIONS = [0.75, 0.80, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20]
 
-# Garante que o diretório termina com barra
+# Garante formatação correta de caminho
 if not DIRETORIO_BASE.endswith(("/", "\\")):
     DIRETORIO_BASE += "/"
 
-# O arquivo de saída será salvo automaticamente dentro da pasta de dados escolhida
 resultfile = os.path.join(DIRETORIO_BASE, "all_extracted_data.txt")
 
-# ============================================================
-# 2. Montagem do cabeçalho
-# ============================================================
-
+#%% 2. MONTAGEM DO CABEÇALHO (HEADER)
 header = ["part", "ortholabel", "seglabel", "sylllabel", "wordlabel",
           "segdur", "sylldur", "worddur", "sentdur", "intmeanamp", "intmaxamp"]
 
@@ -60,28 +49,23 @@ if EXTRAIR_FORMANTES:
 
 rows = []
 
-# ============================================================
-# 3. Lista de TextGrids
-# ============================================================
-
+#%% 3. MAPEAMENTO DOS ARQUIVOS TEXTGRID
 textgrid_files = sorted(glob.glob(os.path.join(DIRETORIO_BASE, "*.TextGrid")))
 n_textgrids = len(textgrid_files)
 
 if n_textgrids == 0:
-    raise FileNotFoundError("There are no .TextGrid files in the folder!")
+    raise FileNotFoundError("Não existem arquivos .TextGrid na pasta informada!")
 
-# ============================================================
-# 4. Loop principal (equivalente ao "for ifile from 1 to n_textgrids")
-# ============================================================
-
-for ifile, tg_path in enumerate(textgrid_files, start=1):
+#%% 4. EXTRAÇÃO ACÚSTICA E DE DURAÇÃO (LOOP PRINCIPAL)
+for ifile, tg_path in enumerate(tqdm(textgrid_files, desc="Processando TextGrids", unit="arq"), start=1):
     curr_file = os.path.basename(tg_path)
-    sn = os.path.splitext(curr_file)[0]          # nome do objeto (= "part")
+    sn = os.path.splitext(curr_file)[0]          # Nome do objeto (= "part")
 
     wav_file = sn + ".wav"
     wav_path = os.path.join(DIRETORIO_BASE, wav_file)
 
-    print(f"Reading file {curr_file}: {ifile}/{n_textgrids}")
+    # Imprime mensagem sem quebrar a barra de progresso do tqdm
+    tqdm.write(f"Lendo arquivo {ifile}/{n_textgrids}: {curr_file}")
 
     textgrid = call("Read from file", tg_path)
     sound = call("Read from file", wav_path)
@@ -127,8 +111,7 @@ for ifile, tg_path in enumerate(textgrid_files, start=1):
                 nseg = firstseg
                 segdur = segend - segstart
 
-                # Formantes: calculados 1x por sílaba, a partir do primeiro
-                # segmento — igual ao script Praat original.
+                # Formantes: calculados 1x por sílaba, a partir do primeiro segmento
                 formant_values = []
                 if EXTRAIR_FORMANTES:
                     for frac in FORMANT_FRACTIONS:
@@ -138,7 +121,7 @@ for ifile, tg_path in enumerate(textgrid_files, start=1):
                         f3 = call(formant, "Get value at time", 3, tp, "Hertz", "Linear")
                         formant_values += [f1, f2, f3]
 
-                # Amplitude: idem, calculada 1x por sílaba (primeiro segmento)
+                # Amplitude: calculada 1x por sílaba (primeiro segmento)
                 intmeanamp = call(sound, "Get mean", 0, segstart, segend)
                 intmaxamp = call(sound, "Get maximum", segstart, segend, "Sinc70")
 
@@ -163,17 +146,8 @@ for ifile, tg_path in enumerate(textgrid_files, start=1):
                 syllend = call(textgrid, "Get end time of interval", SYLL_TIER, nsyll)
                 sylldur = syllend - syllstart
 
-    # Não é preciso "Remove": o garbage collector do Python libera
-    # sound/textgrid/formant assim que a próxima iteração os substitui.
-
-# ============================================================
-# 5. Salvar resultados
-# ============================================================
-
+#%% 5. EXPORTAÇÃO DOS DADOS
 df = pd.DataFrame(rows, columns=header)
-
-# encoding="utf-16-be" mantém compatibilidade com o pipeline existente,
-# que já lê "all.txt" com encoding="utf-16-be" (padrão de saída do Praat).
 df.to_csv(resultfile, sep="\t", index=False, encoding="utf-16-be")
 
-print("Script concluído com sucesso!")
+print(f"\nProcessamento concluído com sucesso! {len(df)} linhas salvas em: {resultfile}")
