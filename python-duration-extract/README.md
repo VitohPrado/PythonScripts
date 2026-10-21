@@ -8,6 +8,8 @@ O script foi desenhado originalmente para ler a seguinte estrutura:
 *   **Tier 4 (Palavras):** Palavra alvo (ex: `vagas`)
 *   **Tier 6 (Ortografia):** A frase inteira (ex: `eu digo vagas baixinho`)
 
+Abaixo está o modelo de TextGrid previsto para o script, gerado via EasyAlign (plugin de segmentação automática para o Praat).
+
 ![Exemplo de estrutura do TextGrid](img/textgrid_structure_example.png)
 
 **Meus TextGrids são diferentes. O script funciona?**
