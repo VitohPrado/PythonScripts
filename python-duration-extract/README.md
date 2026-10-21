@@ -14,7 +14,7 @@ O script foi desenhado originalmente para ler a seguinte estrutura:
 Sim! A estrutura acima é apenas o padrão. Se os seus dados estiverem em tiers diferentes (por exemplo, palavras no Tier 2 e fones no Tier 3), basta abrir o script Python e alterar os números na seção de configurações:
 
 ```python
-ORTHO_TIER = 6
-WORD_TIER = 4
+ORTHO_TIER = 5
+WORD_TIER = 3
 SYLL_TIER = 2
 SEG_TIER = 1
