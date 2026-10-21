@@ -10,7 +10,7 @@ O script foi desenhado originalmente para ler a seguinte estrutura:
 
 Abaixo está o modelo de TextGrid previsto para o script, gerado via EasyAlign (plugin de segmentação automática para o Praat).
 
-![Exemplo de estrutura do TextGrid](img/textgrid_structure_example.png)
+<img src="img/textgrid_structure_example.png" alt="Estrutura do TextGrid" width="60%">
 
 **Meus TextGrids são diferentes. O script funciona?**
 Sim! A estrutura acima é apenas o padrão. Se os seus dados estiverem em tiers diferentes (por exemplo, palavras no Tier 2 e fones no Tier 3), basta abrir o script Python e alterar os números na seção de configurações:
