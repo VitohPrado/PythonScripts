@@ -5,8 +5,8 @@ Para que o script funcione perfeitamente com as configurações padrão, os seus
 O script foi desenhado originalmente para ler a seguinte estrutura:
 *   **Tier 1 (Segmentos):** Fones individuais (ex: `e`, `d`, `g`, `v`, `a`, `s`)
 *   **Tier 2 (Sílabas):** Divisão silábica (ex: `e`, `dZg`, `va`, `gas`)
-*   **Tier 4 (Palavras):** Palavra alvo (ex: `vagas`)
-*   **Tier 6 (Ortografia):** A frase inteira (ex: `eu digo vagas baixinho`)
+*   **Tier 3 (Palavras):** Palavra alvo (ex: `vagas`)
+*   **Tier 5 (Ortografia):** A frase inteira (ex: `eu digo vagas baixinho`)
 
 Abaixo está o modelo de TextGrid previsto para o script, gerado via EasyAlign (plugin de segmentação automática para o Praat).
 
