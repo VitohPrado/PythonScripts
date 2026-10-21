@@ -1,6 +1,6 @@
 # praat-f0-extractor
 
-*[Read in English](README.md)*
+*[Read in English](README_eng.md)*
 
 Extrai medidas de F0 (pitch) de **TextGrids + arquivos WAV do Praat** em três níveis — **palavra, sílaba e vogal** — e gera duas tabelas separadas por tabulação, prontas para usar no R ou no Python. Roda sobre o [Parselmouth](https://parselmouth.readthedocs.io/), então o rastreamento de pitch e todas as medidas usam o próprio motor do Praat; não é preciso abrir o Praat.
 
