@@ -8,7 +8,7 @@ O script foi desenhado originalmente para ler a seguinte estrutura:
 *   **Tier 4 (Palavras):** Palavra alvo (ex: `vagas`)
 *   **Tier 6 (Ortografia):** A frase inteira (ex: `eu digo vagas baixinho`)
 
-*(Adicione a sua imagem aqui para ilustrar a estrutura)*
+<img width="4032" height="327" alt="image" src="https://github.com/user-attachments/assets/32d95524-e0f0-4d2d-98aa-3125c2dbb898" />
 
 **Meus TextGrids são diferentes. O script funciona?**
 Sim! A estrutura acima é apenas o padrão. Se os seus dados estiverem em tiers diferentes (por exemplo, palavras no Tier 2 e fones no Tier 3), basta abrir o script Python e alterar os números na seção de configurações:
