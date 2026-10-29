@@ -1,0 +1,4 @@
+praat-parselmouth
+numpy
+pandas
+matplotlib
